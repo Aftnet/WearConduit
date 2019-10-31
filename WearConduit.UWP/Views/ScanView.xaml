@@ -5,10 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:MvvmCross.Platforms.Uap.Views"
+    xmlns:viewmodels="using:WearConduit.Shared.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <ListView ItemsSource="{x:Bind VM.Devices}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodels:DeviceViewModel">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{x:Bind ID}"/>
+                        <TextBlock Text="{x:Bind Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </views:MvxWindowsPage>

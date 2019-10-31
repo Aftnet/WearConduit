@@ -9,6 +9,7 @@ namespace WearConduit.Shared
         public override void Initialize()
         {
             var ioc = Mvx.IoCProvider;
+            ioc.RegisterSingleton(Plugin.BluetoothLE.CrossBleAdapter.Current);
             RegisterAppStart<ScanViewModel>();
         }
     }

@@ -1,36 +1,44 @@
 ﻿using MvvmCross.ViewModels;
-using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BluetoothLE;
 using System;
+using System.Collections.Generic;
 
 namespace WearConduit.Shared.ViewModels
 {
     public class ScanViewModel : MvxViewModel
     {
         private IAdapter Adapter { get; }
+        private HashSet<Guid> ScannedUids { get; } = new HashSet<Guid>();
+
         public MvxObservableCollection<DeviceViewModel> Devices { get; } = new MvxObservableCollection<DeviceViewModel>();
 
         public ScanViewModel(IAdapter adapter)
         {
             Adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
-
-            Adapter.ScanMode = ScanMode.LowLatency;
-            Adapter.ScanTimeout = 10;
-            Adapter.DeviceDiscovered += Adapter_DeviceDiscovered;
-        }
-
-        private void Adapter_DeviceDiscovered(object sender, Plugin.BLE.Abstractions.EventArgs.DeviceEventArgs e)
-        {
-            Devices.Add(new DeviceViewModel(e.Device));
         }
 
         public override void ViewAppeared()
         {
-            Adapter.StartScanningForDevicesAsync();
+            Adapter.Scan().Subscribe(d =>
+            {
+                var device = d.Device;
+                lock(ScannedUids)
+                {
+                    if (ScannedUids.Contains(device.Uuid))
+                    {
+                        return;
+                    }
+
+                    ScannedUids.Add(device.Uuid);
+                }
+
+                Devices.Add(new DeviceViewModel(device));
+            });
         }
 
         public override void ViewDisappearing()
         {
-            Adapter.StopScanningForDevicesAsync();
+            Adapter.StopScan();
         }
     }
 }

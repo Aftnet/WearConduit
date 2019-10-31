@@ -1,4 +1,4 @@
-﻿using Plugin.BLE.Abstractions.Contracts;
+﻿using Plugin.BluetoothLE;
 using System;
 
 namespace WearConduit.Shared.ViewModels
@@ -6,7 +6,7 @@ namespace WearConduit.Shared.ViewModels
     public class DeviceViewModel
     {
         private IDevice Device { get; }
-        public Guid ID => Device.Id;
+        public Guid ID => Device.Uuid;
         public string Name => Device.Name;
 
         public DeviceViewModel(IDevice device)
