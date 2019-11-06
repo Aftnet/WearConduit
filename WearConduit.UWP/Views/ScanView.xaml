@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <ListView ItemsSource="{x:Bind VM.Devices}">
+        <ListView ItemsSource="{x:Bind VM.Devices}" SelectionMode="None" ItemClick="ListView_ItemClick">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodels:DeviceViewModel">
                     <StackPanel Orientation="Vertical">

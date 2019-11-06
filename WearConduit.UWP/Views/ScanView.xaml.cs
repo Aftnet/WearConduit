@@ -13,5 +13,10 @@ namespace WearConduit.UWP.Views
         {
             this.InitializeComponent();
         }
+
+        private void ListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        {
+            VM.PairDevice.Execute((DeviceViewModel)e.ClickedItem);
+        }
     }
 }

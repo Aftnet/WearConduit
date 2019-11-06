@@ -5,7 +5,7 @@ namespace WearConduit.Shared.ViewModels
 {
     public class DeviceViewModel
     {
-        private IDevice Device { get; }
+        public IDevice Device { get; }
         public Guid ID => Device.Uuid;
         public string Name => Device.Name;
 

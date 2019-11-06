@@ -1,7 +1,11 @@
-﻿using MvvmCross.ViewModels;
+﻿using MvvmCross.Commands;
+using MvvmCross.ViewModels;
 using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace WearConduit.Shared.ViewModels
 {
@@ -12,26 +16,30 @@ namespace WearConduit.Shared.ViewModels
 
         public MvxObservableCollection<DeviceViewModel> Devices { get; } = new MvxObservableCollection<DeviceViewModel>();
 
+        public IMvxCommand<DeviceViewModel> PairDevice { get; }
+
         public ScanViewModel(IAdapter adapter)
         {
             Adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+
+            PairDevice = new MvxCommand<DeviceViewModel>(async d =>
+            {
+                Adapter.StopScan();
+                var services = await d.Device.DiscoverServices().AsQbservable().ToArray();
+            });
         }
 
         public override void ViewAppeared()
         {
-            Adapter.Scan().Subscribe(d =>
+            Adapter.Scan(new ScanConfig { ScanType = BleScanType.LowLatency }).ObserveOn(CurrentThreadScheduler.Instance).Subscribe(d =>
             {
                 var device = d.Device;
-                lock(ScannedUids)
+                if (ScannedUids.Contains(device.Uuid) || !device.Name.Contains("Band"))
                 {
-                    if (ScannedUids.Contains(device.Uuid))
-                    {
-                        return;
-                    }
-
-                    ScannedUids.Add(device.Uuid);
+                    return;
                 }
 
+                ScannedUids.Add(device.Uuid);
                 Devices.Add(new DeviceViewModel(device));
             });
         }
