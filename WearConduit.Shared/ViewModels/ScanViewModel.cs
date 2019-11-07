@@ -25,7 +25,9 @@ namespace WearConduit.Shared.ViewModels
             PairDevice = new MvxCommand<DeviceViewModel>(async d =>
             {
                 Adapter.StopScan();
+                d.Device.Connect();
                 var services = await d.Device.DiscoverServices().AsQbservable().ToArray();
+
             });
         }
 
