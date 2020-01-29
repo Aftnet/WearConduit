@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MvvmCross" Version="6.4.1" />
+    <PackageReference Include="MvvmCross" Version="6.4.2" />
     <PackageReference Include="Plugin.BluetoothLE" Version="6.2.6" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
   </ItemGroup>
 
 </Project>

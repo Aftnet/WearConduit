@@ -10,7 +10,7 @@ namespace WearConduit.Shared
         {
             var ioc = Mvx.IoCProvider;
             ioc.RegisterSingleton(Plugin.BluetoothLE.CrossBleAdapter.Current);
-            RegisterAppStart<ScanViewModel>();
+            RegisterAppStart<TestViewModel>();
         }
     }
 }
