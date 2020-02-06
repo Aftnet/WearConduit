@@ -25,16 +25,34 @@ namespace WearConduit.Shared.Models
             return tcs.Task;
         }
 
-        public static async Task<bool> WriteCharacteristic(this IDevice device, Guid serviceID, Guid characteristicID, byte[] payload)
+        public static Task<bool> WriteCharacteristic(this IDevice device, Guid serviceID, Guid characteristicID, byte[] payload)
         {
-            var characteristic = await GetCharacteristicAsync(device, serviceID, characteristicID);
-            if (characteristic == null)
+            var tcs = new TaskCompletionSource<bool>();
+            GetCharacteristicAsync(device, serviceID, characteristicID).ContinueWith(d =>
             {
-                return false;
-            }
+                var characteristic = d.Result;
+                if (characteristic == null)
+                {
+                    tcs.SetResult(false);
+                    return;
+                }
 
-            await characteristic.Write(payload);
-            return true;
+                var disposable = default(IDisposable);
+                disposable = characteristic.Write(payload).Subscribe(e =>
+                {
+                    disposable.Dispose();
+                    tcs.SetResult(true);
+                    return;
+                },
+                f =>
+                {
+                    disposable.Dispose();
+                    tcs.SetResult(false);
+                    return;
+                });
+            });
+
+            return tcs.Task;
         }
 
         public static async Task<bool> WriteCharacteristicWithoutResponse(this IDevice device, Guid serviceID, Guid characteristicID, byte[] payload)

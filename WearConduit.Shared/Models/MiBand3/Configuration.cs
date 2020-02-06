@@ -10,7 +10,7 @@ namespace WearConduit.Shared.Models.MiBand3
         public static Task<bool> SetTimeAsync(IDevice device, DateTime time)
         {
             var payload = ConversionHelper.GetTimeBytes(time, ConversionHelper.TimeUnit.Seconds);
-            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCurrentTime, payload);
+            return device.WriteCharacteristic(Resources.GuidServiceConfiguration, Resources.GuidCurrentTime, payload);
         }
 
         /// <summary>
