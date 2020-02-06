@@ -24,7 +24,10 @@ namespace WearConduit.Shared.ViewModels
             }
 
             device.Connect();
-            await Models.MiBand3.Authentication.AuthenticateAsync(device);
+            var result = await Models.MiBand3.Authentication.AuthenticateAsync(device);
+            result = await Models.MiBand3.Configuration.SetTimeDisplayUnit(device, true);
+            result = await Models.MiBand3.Configuration.SetDateDisplayUnit(device, true);
+            result = await Models.MiBand3.Configuration.SetTimeAsync(device, DateTime.Now);
         }
     }
 }

@@ -43,17 +43,17 @@ namespace WearConduit.Shared.Models.MiBand3
                         }
 
                         //Check if response is valid
-                        if (data[0] == Resources.AuthResponse && data[2] == Resources.AuthSuccess)
+                        if (data[0] == Resources.ResponseAuthHeader && data[2] == Resources.ResponseAuthSuccessFlag)
                         {
-                            if (data[1] == Resources.AuthSendKey)
+                            if (data[1] == Resources.ResponseAuthRequestChallenge)
                             {
                                 await RequestChallenge(d);
                             }
-                            else if (data[1] == Resources.AuthRequestRandomAuthNumber)
+                            else if (data[1] == Resources.ResponseAuthSendChallengeResponse)
                             {
                                 await SendChallengeResponse(d, data);
                             }
-                            else if (data[1] == Resources.AuthSendEncryptedAuthNumber)
+                            else if (data[1] == Resources.ResponseAuthComplete)
                             {
                                 notifyCharacteristicDisposable.Dispose();
                                 tcs.SetResult(true);
@@ -102,8 +102,7 @@ namespace WearConduit.Shared.Models.MiBand3
 
         private static async Task RequestChallenge(IGattCharacteristic authCharacteristic)
         {
-            var payload = new byte[Resources.RequestNumber.Length];
-            Resources.RequestNumber.CopyTo(payload);
+            var payload = Resources.PayloadAuthRequestChallenge.GetArrayCopy();
             await authCharacteristic.WriteWithoutResponse(payload);
         }
 

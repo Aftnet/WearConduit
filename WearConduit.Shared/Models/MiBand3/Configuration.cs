@@ -10,7 +10,7 @@ namespace WearConduit.Shared.Models.MiBand3
         public static Task<bool> SetTimeAsync(IDevice device, DateTime time)
         {
             var payload = ConversionHelper.GetTimeBytes(time, ConversionHelper.TimeUnit.Seconds);
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidCurrentTime, payload);
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCurrentTime, payload);
         }
 
         /// <summary>
@@ -19,10 +19,10 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="localeString"></param>
         public static Task<bool> SetLanguageAsync(IDevice device, string localeString)
         {
-            var payload = new byte[Resources.Byte_SetLanguage_Template.Length];
-            Resources.Byte_SetLanguage_Template.CopyTo(payload);
+            var payload = new byte[Resources.PayloadTemplateSetLanguage.Length];
+            Resources.PayloadTemplateSetLanguage.CopyTo(payload);
             Buffer.BlockCopy(Encoding.ASCII.GetBytes(localeString), 0, payload, 3, Encoding.ASCII.GetBytes(localeString).Length);
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="is24format"></param>
         public static Task<bool> SetTimeDisplayUnit(IDevice device, bool is24format)
         {
-            var payload = is24format ? Resources.Byte_TimeFomat_24hours.GetArrayCopy() : Resources.Byte_TimeFomat_12hours.GetArrayCopy();
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            var payload = is24format ? Resources.PayloadSetTimeFormat24h.GetArrayCopy() : Resources.PayloadSetTimeFormat12h.GetArrayCopy();
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="isdMY"></param>
         public static Task<bool> SetDateDisplayUnit(IDevice device, bool isdMY)
         {
-            var payload = isdMY ? Resources.Byte_DateFormat_dd_MM_YYYY.GetArrayCopy() : Resources.Byte_DateFormat_MM_dd_YYYY.GetArrayCopy();
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            var payload = isdMY ? Resources.PayloadDateFormatDDMMYYYY.GetArrayCopy() : Resources.PayloadDateFormatMMDDYYYY.GetArrayCopy();
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -61,13 +61,13 @@ namespace WearConduit.Shared.Models.MiBand3
             Buffer.BlockCopy(goalBytes, 0, payload, beginCommand.Length, goalBytes.Length);
             Buffer.BlockCopy(endCommand, 0, payload, beginCommand.Length + goalBytes.Length, endCommand.Length);
 
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         public static Task<bool> EnableStepGoalNotification(IDevice device, bool enable)
         {
-            var payload = enable ? Resources.Byte_EnableGoalNotification.GetArrayCopy() : Resources.Byte_DisableGoalNotification.GetArrayCopy();
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            var payload = enable ? Resources.PayloadEnableGoalNotification.GetArrayCopy() : Resources.PayloadDisableGoalNotification.GetArrayCopy();
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="activate"></param>
         public static Task<bool> SetActivateOnWristLift(IDevice device, bool activate)
         {
-            var payload = activate ? Resources.Byte_EnableActivateOnLiftWrist.GetArrayCopy() : Resources.Byte_DisableActivateOnLiftWrist.GetArrayCopy();
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            var payload = activate ? Resources.PayloadEnableActivateOnLiftWrist.GetArrayCopy() : Resources.PayloadDisableActivateOnLiftWrist.GetArrayCopy();
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="to"></param>
         public static Task<bool> SetActivateOnWristLift(IDevice device, DateTime from, DateTime to)
         {
-            var payload = Resources.Byte_ScheduleActivateOnLiftWrist_Template.GetArrayCopy();
+            var payload = Resources.PayloadTemplateScheduleActivateOnLiftWrist.GetArrayCopy();
 
             payload[4] = Convert.ToByte(from.Hour);
             payload[5] = Convert.ToByte(from.Minute);
@@ -95,7 +95,7 @@ namespace WearConduit.Shared.Models.MiBand3
             payload[6] = Convert.ToByte(to.Hour);
             payload[7] = Convert.ToByte(to.Minute);
 
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace WearConduit.Shared.Models.MiBand3
         /// <param name="enable"></param>
         public static Task<bool> EnableSleepTracking(IDevice device, bool enable)
         {
-            var payload = enable ? Resources.Byte_EnableSleepMeasurement.GetArrayCopy() : Resources.Byte_DisableSleepMeasurement.GetArrayCopy();
-            return device.WriteCharacteristicWithoutResponse(Guid.Empty, Resources.GuidDeviceConfiguration, payload);
+            var payload = enable ? Resources.PayloadEnableSleepMeasurement.GetArrayCopy() : Resources.PayloadDisableSleepMeasurement.GetArrayCopy();
+            return device.WriteCharacteristicWithoutResponse(Resources.GuidServiceConfiguration, Resources.GuidCharacteristicConfiguration, payload);
         }
     }
 }
