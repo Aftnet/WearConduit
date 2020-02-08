@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WearConduit.Shared.Models.MiBand3
 {
-    public static class Authentication
+    internal static class Authentication
     {
         private const int ChallengeHeaderLength = 3;
         private const int ChallengePayloadLength = 16;

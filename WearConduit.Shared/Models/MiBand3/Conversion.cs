@@ -2,7 +2,7 @@
 
 namespace WearConduit.Shared.Models.MiBand3
 {
-    public static class ConversionHelper
+    internal static class ConversionHelper
     {
         public enum TimeUnit { Seconds, Days, Hours, Minutes, Unknown = -1 }
 
