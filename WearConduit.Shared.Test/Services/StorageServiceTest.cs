@@ -10,7 +10,7 @@ namespace WearConduit.Shared.Test.Services
 {
     public class StorageServiceTest : TestBase<StorageService>
     {
-        protected internal override StorageService InstantiateTarget() => new StorageService();
+        protected internal override StorageService InstantiateTarget() => new StorageService(DBFile.FullName);
 
         private FileInfo DBFile { get; }
 
